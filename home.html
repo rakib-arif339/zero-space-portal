@@ -6,32 +6,218 @@
     <title>Portfolio | Dashboard</title>
     <link rel="stylesheet" href="style.css">
     <style>
+        /* --- DASHBOARD SPECIFIC BODY RESET --- */
+        html {
+            scroll-behavior: smooth; /* Enables smooth scrolling */
+            scroll-padding-top: 110px; /* Prevents navbar from hiding content */
+        }
+
+        body {
+            display: block; 
+            padding-top: 90px; 
+            padding-bottom: 50px;
+        }
+
         /* --- BURGER MENU BUTTON --- */
-        .menuButton { display: flex; justify-content: center; align-items: center; flex-direction: column; gap: 15%; width: 2.8em; height: 2.8em; border-radius: 0.5em; background: #e8e8e8; border: 1px solid #e8e8e8; transition: all .3s; box-shadow: 4px 4px 8px #c5c5c5, -4px -4px 8px #ffffff; cursor: pointer; }
-        .menuButton span { width: 20px; height: 3px; background: #131313; border-radius: 100px; transition: 0.3s ease; }
+        /* Hidden on desktop, shown on mobile/zoomed via media query */
+        .menuButton { display: none; justify-content: center; align-items: center; flex-direction: column; gap: 15%; width: 2.8em; height: 2.8em; border-radius: 0.5em; background: var(--bg-color); border: 1px solid var(--bg-color); transition: all .3s; box-shadow: 4px 4px 8px var(--shadow-dark), -4px -4px 8px var(--shadow-light); cursor: pointer; }
+        .menuButton span { width: 20px; height: 3px; background: var(--text-main); border-radius: 100px; transition: 0.3s ease; }
         #check { display: none; }
         #check:checked ~ span.top { transform: translateY(220%) rotate(45deg); width: 25px; }
         #check:checked ~ span.bot { transform: translateY(-200%) rotate(-45deg); width: 25px; }
         #check:checked ~ span.mid { transform: translateX(-10px); opacity: 0; }
 
         /* --- SIDEBAR --- */
-        .sidebar-menu { position: fixed; left: -250px; top: 100px; display: flex; flex-direction: column; width: 200px; background-color: #0d1117; border-radius: 10px; padding: 10px; transition: 0.5s; z-index: 1000; }
-        .sidebar-menu.active { left: 20px; }
-        .value { font-size: 15px; background-color: transparent; border: none; padding: 12px; color: white; display: flex; align-items: center; gap: 10px; cursor: pointer; border-radius: 8px; transition: 0.3s; width: 100%; text-align: left; }
-        .value:hover { background-color: #1a1f24; }
+        /* Added opacity and visibility for smooth slide and fade animation */
+        .sidebar-menu { position: fixed; left: -250px; top: 100px; display: flex; flex-direction: column; width: 220px; background-color: var(--bg-color); border-radius: 20px; padding: 15px; transition: all 0.5s ease; z-index: 1000; box-shadow: 8px 8px 16px var(--shadow-dark), -8px -8px 16px var(--shadow-light); opacity: 0; visibility: hidden; }
+        .sidebar-menu.active { left: 20px; opacity: 1; visibility: visible; }
+        .value { font-size: 15px; font-weight: 600; background-color: transparent; border: none; padding: 12px; color: var(--text-main); display: flex; align-items: center; gap: 10px; cursor: pointer; border-radius: 8px; transition: 0.3s; width: 100%; text-align: left; text-decoration: none; }
+        .value:hover, .value.active { box-shadow: inset 3px 3px 6px var(--shadow-dark), inset -3px -3px 6px var(--shadow-light); color: var(--text-main); }
 
-        /* --- NAVBAR & THEME TOGGLE --- */
-        .navbar { display: flex; align-items: center; padding: 20px; justify-content: space-between; }
+        /* --- NAVBAR & HEADER PROFILE --- */
+        .navbar { 
+            position: fixed; 
+            top: 0; 
+            left: 0; 
+            width: 100%; 
+            display: flex; 
+            align-items: center; 
+            padding: 15px 40px; 
+            justify-content: space-between; 
+            z-index: 900; 
+            background: var(--overlay-bg); 
+            backdrop-filter: blur(20px) saturate(180%); 
+            -webkit-backdrop-filter: blur(20px) saturate(180%); 
+            border-bottom: 1px solid rgba(255, 255, 255, 0.15); 
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1); 
+        }
         .nav-left { display: flex; align-items: center; gap: 20px; }
         
+        .header-profile { display: flex; flex-direction: column; justify-content: center; }
+        .header-name { color: var(--text-main); font-size: 1.4rem; margin: 0; line-height: 1.2; letter-spacing: -0.5px; }
+        .header-title { color: var(--text-sub); font-size: 0.85rem; font-weight: 600; margin: 0; text-transform: uppercase; letter-spacing: 1px; }
+
+        /* --- TOP MIDDLE NAVIGATION --- */
+        .nav-links {
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            list-style: none;
+            gap: 15px;
+            margin: 0;
+            padding: 0;
+            align-items: center;
+        }
+
+        .nav-links li a {
+            text-decoration: none;
+            color: var(--text-sub);
+            font-size: 0.95rem;
+            font-weight: 600;
+            padding: 10px 18px;
+            border-radius: 12px;
+            transition: all 0.3s ease;
+        }
+
+        .nav-links li a:hover, .nav-links li a.active {
+            color: var(--text-main);
+            background: var(--bg-color);
+            box-shadow: inset 3px 3px 6px var(--shadow-dark), inset -3px -3px 6px var(--shadow-light);
+        }
+        
+        .theme-toggle-wrapper { position: static; } 
+
+        /* --- DASHBOARD LAYOUT & NEU CARDS --- */
+        .dashboard-content {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+            transition: margin-left 0.5s;
+        }
+
+        .neu-card {
+            background: var(--bg-color);
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 10px 10px 20px var(--shadow-dark), -10px -10px 20px var(--shadow-light);
+            transition: all 0.4s ease;
+        }
+
+        [data-theme="dark"] .neu-card {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
         /* --- HERO SECTION --- */
-        .hero { display: flex; flex-direction: column; align-items: center; justify-content: center; height: 70vh; text-align: center; padding: 20px; }
-        .hero h1 { font-size: 3rem; color: #053146; margin-bottom: 10px; }
-        .hero p { font-size: 1.2rem; color: #64748b; max-width: 600px; }
+        .hero-section { text-align: center; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+        .hero-section h1 { font-size: 3rem; color: var(--text-main); margin-bottom: 15px; letter-spacing: -1px; }
+        .hero-section p { font-size: 1.1rem; color: var(--text-sub); max-width: 650px; line-height: 1.6; margin-bottom: 30px; }
+        .hero-buttons { display: flex; gap: 20px; flex-wrap: wrap; justify-content: center; }
+        .hero-buttons .neu-button { width: auto; padding: 12px 35px; margin-top: 0; }
+
+        /* --- SECTION TITLES --- */
+        .section-title {
+            color: var(--text-main);
+            font-size: 1.8rem;
+            margin-top: 50px;
+            margin-bottom: -10px;
+            padding-left: 10px;
+            border-left: 4px solid #3D7EAE;
+            scroll-margin-top: 110px; /* For smooth scrolling exact positioning */
+        }
+
+        /* --- STATS GRID --- */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 30px;
+        }
+
+        .stat-card {
+            padding: 30px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            text-align: left;
+        }
+        .stat-card h3 { color: var(--text-main); font-size: 1.4rem; border-bottom: 2px solid var(--shadow-dark); padding-bottom: 10px; }
+        .stat-card p { color: var(--text-sub); font-size: 1rem; line-height: 1.5; }
+
+        /* Responsive adjustments */
+        @media (max-width: 1024px) {
+            .nav-links { display: none; } /* Hides top menu on smaller screens or when zoomed in */
+            .menuButton { display: flex; } /* Shows the hamburger menu icon */
+        }
+
+        @media (max-width: 768px) {
+            .navbar { padding: 15px 20px; }
+            .hero-section h1 { font-size: 2.2rem; }
+            .header-name { font-size: 1.1rem; }
+            .header-title { font-size: 0.7rem; }
+        }
+
+        /* --- CONTACT MODAL STYLING --- */
+        .contact-overlay {
+            display: none; 
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: var(--overlay-bg);
+            backdrop-filter: blur(8px);
+            z-index: 2000;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .contact-overlay.active {
+            display: flex;
+            opacity: 1;
+        }
+
+        .contact-card {
+            position: relative;
+            width: 100%;
+            max-width: 500px;
+            margin: 20px;
+            padding-top: 50px; 
+        }
+
+        .close-btn {
+            position: absolute;
+            top: 20px;
+            right: 25px;
+            font-size: 30px;
+            color: var(--text-sub);
+            cursor: pointer;
+            transition: color 0.3s;
+        }
+
+        .close-btn:hover {
+            color: var(--text-main);
+        }
+
+        .input-group textarea {
+            width: 100%; padding: 14px; background: var(--bg-color);
+            border: none; border-radius: 12px; color: var(--input-text); font-size: 14px; outline: none;
+            box-shadow: inset 5px 5px 10px var(--shadow-dark), inset -5px -5px 10px var(--shadow-light);
+            resize: vertical; 
+            font-family: inherit;
+        }
+
+        .input-group textarea:focus {
+            box-shadow: inset 3px 3px 6px var(--shadow-dark), inset -3px -3px 6px var(--shadow-light), 0 0 0 2px rgba(79, 179, 232, 0.3);
+        }
     </style>
 </head>
 <body>
 
+    <!-- NAVBAR -->
     <nav class="navbar">
         <div class="nav-left">
             <label for="check" class="menuButton" id="burgerBtn">
@@ -40,9 +226,25 @@
                 <span class="mid"></span>
                 <span class="bot"></span>
             </label>
-            <h1>Welcome Sir!</h1>
+            <div class="header-profile">
+                <h1 class="header-name">Arif Imtiaz Rakib</h1>
+                <p class="header-title">Software Engineer</p>
+            </div>
         </div>
 
+        <!-- TOP MIDDLE NAVIGATION -->
+        <ul class="nav-links">
+            <li><a href="#home" class="nav-item active">Home</a></li>
+            <li><a href="#about" class="nav-item">About</a></li>
+            <li><a href="#skills" class="nav-item">Skills</a></li>
+            <li><a href="#projects" class="nav-item">Projects</a></li>
+            <li><a href="#education" class="nav-item">Education</a></li>
+            <li><a href="#certificates" class="nav-item">Certificates</a></li>
+            <li><a href="#resume" class="nav-item">Resume</a></li>
+            <li><a href="#" id="navContactBtn" class="nav-item">Contact</a></li>
+        </ul>
+
+        <!-- THEME TOGGLE -->
         <div class="theme-toggle-wrapper">
             <label class="theme-switch">
               <input type="checkbox" id="themeToggle" class="theme-switch__checkbox">
@@ -67,30 +269,225 @@
         </div>
     </nav>
 
+    <!-- SIDEBAR -->
     <div class="sidebar-menu" id="sideMenu">
-        <button class="value">Home</button>
-        <button class="value">About</button>
-        <button class="value">Projects</button>
-        <button class="value">Skills</button>
-        <button class="value">Experience</button>
-        <button class="value">Certificates</button>
-        <button class="value">Blog</button>
-        <button class="value">Resume</button>
-        <button class="value">Contact</button>
+        <a href="#home" class="value side-item active">Home</a>
+        <a href="#about" class="value side-item">About</a>
+        <a href="#skills" class="value side-item">Skills</a>
+        <a href="#projects" class="value side-item">Projects</a>
+        <a href="#education" class="value side-item">Education</a>
+        <a href="#certificates" class="value side-item">Certificates</a>
+        <a href="#resume" class="value side-item">Resume</a>
+        <a href="#" id="sideContactBtn" class="value side-item">Contact</a>
     </div>
 
-    <main class="hero">
-        <h1>Building Digital Solutions.</h1>
-        <p>I am a Software Engineering student passionate about crafting efficient, scalable, and aesthetic web applications.</p>
+    <!-- MAIN DASHBOARD CONTENT -->
+    <main class="dashboard-content" id="mainContent">
+        
+        <!-- Hero Card (Acts as Home & About) -->
+        <section class="hero-section neu-card" id="home">
+            <h1 id="about">Building Digital Solutions.</h1>
+            <p>I am a Software Engineering student passionate about crafting efficient, scalable, and aesthetic web applications, leveraging tools like React, Tailwind, and AI Agents to solve modern problems.</p>
+            <div class="hero-buttons">
+                <button class="neu-button" id="resume">View My Work</button>
+                <button class="neu-button" id="openContactBtn">Contact Me</button>
+            </div>
+        </section>
+
+        <!-- Stats / Skills Grid -->
+        <section class="stats-grid" id="skills">
+            <div class="stat-card neu-card">
+                <h3>Frontend Engineering</h3>
+                <p>Building responsive, pixel-perfect interfaces utilizing React, modern HTML5, and Tailwind CSS. Obsessed with Glassmorphism and modern UI/UX principles.</p>
+            </div>
+            
+            <div class="stat-card neu-card">
+                <h3>Backend & Core Logic</h3>
+                <p>Developing scalable architectures and data pipelines. Experienced in Python, Java, and C for building robust server-side applications.</p>
+            </div>
+            
+            <div class="stat-card neu-card">
+                <h3>AI & Automation</h3>
+                <p>Streamlining workflows with intelligent systems. Proficient in integrating LLMs, Zapier, n8n, and custom AI agents for business optimization.</p>
+            </div>
+        </section>
+
+        <h2 class="section-title" id="projects">Featured Projects</h2>
+        
+        <section class="stats-grid">
+            <div class="stat-card neu-card">
+                <h3>DeshExport AI</h3>
+                <p>An AI-powered platform designed to connect rural women artisans directly with global export markets, bridging the gap between local talent and international buyers.</p>
+            </div>
+
+            <div class="stat-card neu-card">
+                <h3>AcademiaVault</h3>
+                <p>A comprehensive relational database management system (DBMS) architected to organize and streamline complex academic institution data efficiently.</p>
+            </div>
+        </section>
+
+        <h2 class="section-title" id="education">Experience & Leadership</h2>
+
+        <section class="stats-grid">
+            <div class="stat-card neu-card">
+                <h3>GoEdu Campus Ambassador</h3>
+                <p>Representing GoEdu for Season 3, actively promoting educational initiatives and fostering a community of continuous technical learning on campus.</p>
+            </div>
+
+            <div class="stat-card neu-card">
+                <h3>Technopreneurship 2026 Finalist</h3>
+                <p>Selected as a finalist for the Technopreneurship program, engaging in kick-off sessions and developing innovative, market-ready business solutions.</p>
+            </div>
+        </section>
+
+        <h2 class="section-title" id="certificates">Academic Background</h2>
+        
+        <section class="stats-grid">
+            <div class="stat-card neu-card">
+                <h3>Software Engineering</h3>
+                <p>Currently pursuing a Bachelor's degree at Daffodil International University (DIU), building a strong foundation in modern software architecture, OOP, and agile development.</p>
+            </div>
+            
+            <div class="stat-card neu-card">
+                <h3>Academic Excellence</h3>
+                <p>Consistently demonstrated high academic performance, achieving a perfect GPA of 5.00 in both Secondary School Certificate (SSC) and Higher Secondary Certificate (HSC) examinations.</p>
+            </div>
+        </section>
+        
     </main>
 
+    <!-- CONTACT MODAL -->
+    <div id="contactModal" class="contact-overlay">
+        <div class="contact-card neu-card">
+            <span class="close-btn" id="closeContactBtn">&times;</span>
+            <h2 style="color: var(--text-main); margin-bottom: 5px;">Get In Touch</h2>
+            <p class="subtitle" style="margin-bottom: 20px;">I'll get back to you as soon as possible.</p>
+            
+            <form id="contactForm">
+                <div class="input-group">
+                    <label for="contactName">Full Name</label>
+                    <input type="text" id="contactName" placeholder="John Doe" required>
+                </div>
+
+                <div class="input-group">
+                    <label for="contactEmail">Email Address</label>
+                    <input type="email" id="contactEmail" placeholder="name@example.com" required>
+                </div>
+
+                <div class="input-group">
+                    <label for="contactMessage">Message</label>
+                    <textarea id="contactMessage" rows="5" placeholder="Write your message here..." required></textarea>
+                </div>
+
+                <button type="submit" class="neu-button">Send Message</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- EXTERNAL SCRIPT -->
     <script src="script.js"></script>
+
+    <!-- PAGE SPECIFIC SCRIPT -->
     <script>
+        // 1. Sidebar Interaction Logic
         const burgerBtn = document.getElementById('burgerBtn');
         const sideMenu = document.getElementById('sideMenu');
+        const mainContent = document.getElementById('mainContent');
+        const burgerCheckbox = document.getElementById('check');
         
         burgerBtn.addEventListener('click', () => {
             sideMenu.classList.toggle('active');
+            
+            if (window.innerWidth > 768) {
+                if (sideMenu.classList.contains('active')) {
+                    mainContent.style.marginLeft = "120px";
+                } else {
+                    mainContent.style.marginLeft = "0px";
+                }
+            }
+        });
+
+        // 2. Auto-close Sidebar on Link Click
+        const sidebarLinks = document.querySelectorAll('.sidebar-menu .value');
+        sidebarLinks.forEach(link => {
+            link.addEventListener('click', () => {
+                sideMenu.classList.remove('active');
+                burgerCheckbox.checked = false; // Reset the burger icon animation
+                if (window.innerWidth > 768) {
+                    mainContent.style.marginLeft = "0px";
+                }
+            });
+        });
+
+        // 3. ScrollSpy Navigation Highlighting Logic
+        const sections = document.querySelectorAll("section[id], h1[id], h2[id], button[id='resume']");
+        const navItems = document.querySelectorAll(".nav-item");
+        const sideItems = document.querySelectorAll(".side-item");
+
+        window.addEventListener("scroll", () => {
+            let current = "";
+            
+            sections.forEach((section) => {
+                const sectionTop = section.offsetTop;
+                // Offset calculation ensures the active state changes precisely
+                if (window.scrollY >= (sectionTop - 150)) {
+                    current = section.getAttribute("id");
+                }
+            });
+
+            // Update Desktop Navbar Highlights
+            navItems.forEach((item) => {
+                item.classList.remove("active");
+                if (item.getAttribute("href") === `#${current}`) {
+                    item.classList.add("active");
+                }
+            });
+
+            // Update Mobile Sidebar Highlights
+            sideItems.forEach((item) => {
+                item.classList.remove("active");
+                if (item.getAttribute("href") === `#${current}`) {
+                    item.classList.add("active");
+                }
+            });
+        });
+
+        // 4. Contact Modal Logic
+        const openContactBtn = document.getElementById('openContactBtn');
+        const closeContactBtn = document.getElementById('closeContactBtn');
+        const contactModal = document.getElementById('contactModal');
+        const contactForm = document.getElementById('contactForm');
+        const navContactBtn = document.getElementById('navContactBtn'); 
+        const sideContactBtn = document.getElementById('sideContactBtn'); 
+
+        function openModal(e) {
+            if(e) e.preventDefault();
+            contactModal.classList.add('active');
+        }
+
+        // Open Modal from various buttons
+        openContactBtn.addEventListener('click', openModal);
+        navContactBtn.addEventListener('click', openModal);
+        sideContactBtn.addEventListener('click', openModal);
+
+        // Close Modal via X button
+        closeContactBtn.addEventListener('click', () => {
+            contactModal.classList.remove('active');
+        });
+
+        // Close Modal if clicking outside the card
+        window.addEventListener('click', (e) => {
+            if (e.target === contactModal) {
+                contactModal.classList.remove('active');
+            }
+        });
+
+        // Handle Form Submission
+        contactForm.addEventListener('submit', (e) => {
+            e.preventDefault(); 
+            alert("Thank you! Your message has been sent successfully.");
+            contactForm.reset(); 
+            contactModal.classList.remove('active'); 
         });
     </script>
 </body>
