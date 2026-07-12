@@ -22,7 +22,6 @@
         }
 
         /* --- BURGER MENU BUTTON --- */
-        /* Hidden on desktop, shown on mobile/zoomed via media query */
         .menuButton { display: none; justify-content: center; align-items: center; flex-direction: column; gap: 15%; width: 2.8em; height: 2.8em; border-radius: 0.5em; background: var(--bg-color); border: 1px solid var(--bg-color); transition: all .3s; box-shadow: 4px 4px 8px var(--shadow-dark), -4px -4px 8px var(--shadow-light); cursor: pointer; }
         .menuButton span { width: 20px; height: 3px; background: var(--text-main); border-radius: 100px; transition: 0.3s ease; }
         #check { display: none; }
@@ -31,7 +30,6 @@
         #check:checked ~ span.mid { transform: translateX(-10px); opacity: 0; }
 
         /* --- SIDEBAR --- */
-        /* Overlays the page smoothly without pushing content sideways */
         .sidebar-menu { 
             position: fixed; 
             left: -280px; 
@@ -75,11 +73,90 @@
         .nav-left { display: flex; align-items: center; gap: 20px; flex-shrink: 0; }
         
         .header-profile { display: flex; flex-direction: column; justify-content: center; }
-        .header-name { color: var(--text-main); font-size: 1.4rem; margin: 0; line-height: 1.2; letter-spacing: -0.5px; }
         .header-title { color: var(--text-sub); font-size: 0.85rem; font-weight: 600; margin: 0; text-transform: uppercase; letter-spacing: 1px; }
 
+        /* --- UIVERSE DUAL-LAYER SCANNING LOGO STYLES --- */
+        .header-name.scan-logo {
+            max-width: fit-content;
+            color: var(--text-sub);
+            font-size: 1.4rem;
+            position: relative;
+            font-family: "Helvetica Neue", "Arial", sans-serif; /* Explicitly matching website real font */
+            font-style: normal; /* Removed italic */
+            font-weight: 700;
+            margin: 0;
+            line-height: 1.2;
+            cursor: default;
+        }
+        
+        .header-name.scan-logo span {
+            display: inline-block;
+            font-family: "Helvetica Neue", "Arial", sans-serif;
+            font-style: normal;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            animation: cut 4.5s ease-in-out infinite;
+            transition: 1s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        
+        .header-name.scan-logo:hover span {
+            color: var(--text-main);
+        }
+        
+        /* Blurred Soft Light Scan Line */
+        .header-name.scan-logo::after {
+            position: absolute;
+            content: "";
+            width: 100%;
+            height: 5px;
+            border-radius: 4px;
+            background-color: rgba(61, 126, 174, 0.55);
+            top: 0px;
+            filter: blur(8px);
+            animation: scan 4.5s ease-in-out infinite;
+            left: 0;
+            z-index: 0;
+            transition: 1s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        /* Luminous Front Razor Scan Line */
+        .header-name.scan-logo::before {
+            position: absolute;
+            content: "";
+            width: 100%;
+            height: 4px;
+            border-radius: 4px;
+            background-color: #3D7EAE;
+            top: 0px;
+            animation: scan 4.5s ease-in-out infinite;
+            left: 0;
+            z-index: 1;
+            filter: opacity(0.9);
+            transition: 1s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        @keyframes scan {
+            0%, 50%, 100% {
+                top: 0px;
+            }
+            25%, 75% {
+                top: 26px; 
+            }
+        }
+
+        @keyframes cut {
+            0%, 75%, 100% {
+                clip-path: inset(0 0 0 0);
+            }
+            25% {
+                clip-path: inset(100% 0 0 0);
+            }
+            50% {
+                clip-path: inset(0 0 100% 0);
+            }
+        }
+
         /* --- TOP MIDDLE NAVIGATION --- */
-        /* Fixed: Removed position absolute to prevent overlapping logo at 175% zoom */
         .nav-links {
             display: flex;
             list-style: none;
@@ -137,7 +214,7 @@
         .hero-section h1 { font-size: 3rem; color: var(--text-main); margin-bottom: 15px; letter-spacing: -1px; }
         .hero-section p { font-size: 1.1rem; color: var(--text-sub); max-width: 650px; line-height: 1.6; margin-bottom: 30px; }
         .hero-buttons { display: flex; gap: 20px; flex-wrap: wrap; justify-content: center; }
-        .hero-buttons .neu-button { width: auto; padding: 12px 35px; margin-top: 0; }
+        .hero-buttons .metal-btn-wrapper { width: auto; margin-top: 0; }
 
         /* --- SECTION TITLES --- */
         .section-title {
@@ -168,16 +245,15 @@
         .stat-card p { color: var(--text-sub); font-size: 1rem; line-height: 1.5; }
 
         /* Responsive adjustments */
-        /* Increased breakpoint to 1280px to cleanly switch to hamburger before overlap occurs at 175% zoom */
         @media (max-width: 1280px) {
-            .nav-links { display: none; } /* Hides top menu on smaller screens or when zoomed in */
-            .menuButton { display: flex; } /* Shows the hamburger menu icon */
+            .nav-links { display: none; }
+            .menuButton { display: flex; }
         }
 
         @media (max-width: 768px) {
             .navbar { padding: 15px 20px; }
             .hero-section h1 { font-size: 2.2rem; }
-            .header-name { font-size: 1.1rem; }
+            .header-name.scan-logo { font-size: 1.1rem; }
             .header-title { font-size: 0.7rem; }
         }
 
@@ -247,7 +323,8 @@
                 <span class="bot"></span>
             </label>
             <div class="header-profile">
-                <h1 class="header-name">Arif Imtiaz Rakib</h1>
+                <!-- LOGO TEXT USING REAL WEBSITE FONT -->
+                <h1 class="header-name scan-logo"><span data-text="Arif">Arif</span></h1>
                 <p class="header-title">Software Engineer</p>
             </div>
         </div>
@@ -309,8 +386,14 @@
             <h1 id="about">Building Digital Solutions.</h1>
             <p>I am a Software Engineering student passionate about crafting efficient, scalable, and aesthetic web applications, leveraging tools like React, Tailwind, and AI Agents to solve modern problems.</p>
             <div class="hero-buttons">
-                <button class="neu-button" id="resume">View My Work</button>
-                <button class="neu-button" id="openContactBtn">Contact Me</button>
+                <div class="metal-btn-wrapper">
+                    <div class="metal-btn-inner"></div>
+                    <button class="neu-button" id="resume">View My Work</button>
+                </div>
+                <div class="metal-btn-wrapper">
+                    <div class="metal-btn-inner"></div>
+                    <button class="neu-button" id="openContactBtn">Contact Me</button>
+                </div>
             </div>
         </section>
 
@@ -399,7 +482,10 @@
                     <textarea id="contactMessage" rows="5" placeholder="Write your message here..." required></textarea>
                 </div>
 
-                <button type="submit" class="neu-button">Send Message</button>
+                <div class="metal-btn-wrapper">
+                    <div class="metal-btn-inner"></div>
+                    <button type="submit" class="neu-button">Send Message</button>
+                </div>
             </form>
         </div>
     </div>
@@ -463,22 +549,19 @@
             });
         }
 
-        // Attach click listeners to all navigation links for immediate highlight & precise smooth scrolling
         const allLinks = document.querySelectorAll('.nav-links a[href^="#"], .sidebar-menu a[href^="#"]');
         allLinks.forEach(link => {
             link.addEventListener('click', function(e) {
                 const targetId = this.getAttribute('href').substring(1);
-                if (!targetId) return; // Skip Contact modal anchor
+                if (!targetId) return; 
                 
                 const targetElement = document.getElementById(targetId);
                 if (targetElement) {
                     e.preventDefault();
                     isClickScrolling = true;
                     
-                    // Immediately highlight the clicked item
                     updateActiveNav(targetId);
 
-                    // Calculate precise scroll position accounting for fixed 90px navbar
                     const navHeight = 90;
                     const elementPosition = targetElement.getBoundingClientRect().top;
                     const offsetPosition = elementPosition + window.pageYOffset - navHeight;
@@ -488,7 +571,6 @@
                         behavior: 'smooth'
                     });
 
-                    // Re-enable automatic scrollspy after smooth scroll animation completes
                     clearTimeout(scrollTimeout);
                     scrollTimeout = setTimeout(() => {
                         isClickScrolling = false;
@@ -498,21 +580,18 @@
         });
 
         window.addEventListener("scroll", () => {
-            if (isClickScrolling) return; // Do not override active state during click smooth-scrolling
+            if (isClickScrolling) return; 
 
             let current = "home";
-            const scrollPosition = window.scrollY + 110; // 90px navbar + 20px buffer
+            const scrollPosition = window.scrollY + 110; 
 
-            // Always highlight Home when at or near the top of the webpage
             if (window.scrollY < 60) {
                 current = "home";
             } 
-            // Accurately catch the bottom-most section when scrolled to the end of the document
             else if (window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 20) {
                 const lastSection = sections[sections.length - 1];
                 if (lastSection) current = lastSection.getAttribute("id");
             } 
-            // Otherwise, detect the closest section above the reading line
             else {
                 sections.forEach((section) => {
                     if (scrollPosition >= section.offsetTop) {
