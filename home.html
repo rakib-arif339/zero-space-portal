@@ -10,12 +10,15 @@
         html {
             scroll-behavior: smooth; /* Enables smooth scrolling */
             scroll-padding-top: 110px; /* Prevents navbar from hiding content */
+            overflow-x: hidden; /* Prevents horizontal scrolling */
         }
 
         body {
             display: block; 
             padding-top: 90px; 
             padding-bottom: 50px;
+            overflow-x: hidden; /* Prevents horizontal scrolling */
+            width: 100%;
         }
 
         /* --- BURGER MENU BUTTON --- */
@@ -28,8 +31,25 @@
         #check:checked ~ span.mid { transform: translateX(-10px); opacity: 0; }
 
         /* --- SIDEBAR --- */
-        /* Added opacity and visibility for smooth slide and fade animation */
-        .sidebar-menu { position: fixed; left: -250px; top: 100px; display: flex; flex-direction: column; width: 220px; background-color: var(--bg-color); border-radius: 20px; padding: 15px; transition: all 0.5s ease; z-index: 1000; box-shadow: 8px 8px 16px var(--shadow-dark), -8px -8px 16px var(--shadow-light); opacity: 0; visibility: hidden; }
+        /* Overlays the page smoothly without pushing content sideways */
+        .sidebar-menu { 
+            position: fixed; 
+            left: -280px; 
+            top: 100px; 
+            display: flex; 
+            flex-direction: column; 
+            width: 220px; 
+            max-height: calc(100vh - 120px); 
+            overflow-y: auto; 
+            background-color: var(--bg-color); 
+            border-radius: 20px; 
+            padding: 15px; 
+            transition: left 0.4s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.4s ease, visibility 0.4s ease; 
+            z-index: 1000; 
+            box-shadow: 8px 8px 16px var(--shadow-dark), -8px -8px 16px var(--shadow-light); 
+            opacity: 0; 
+            visibility: hidden; 
+        }
         .sidebar-menu.active { left: 20px; opacity: 1; visibility: visible; }
         .value { font-size: 15px; font-weight: 600; background-color: transparent; border: none; padding: 12px; color: var(--text-main); display: flex; align-items: center; gap: 10px; cursor: pointer; border-radius: 8px; transition: 0.3s; width: 100%; text-align: left; text-decoration: none; }
         .value:hover, .value.active { box-shadow: inset 3px 3px 6px var(--shadow-dark), inset -3px -3px 6px var(--shadow-light); color: var(--text-main); }
@@ -44,6 +64,7 @@
             align-items: center; 
             padding: 15px 40px; 
             justify-content: space-between; 
+            gap: 20px;
             z-index: 900; 
             background: var(--overlay-bg); 
             backdrop-filter: blur(20px) saturate(180%); 
@@ -51,23 +72,22 @@
             border-bottom: 1px solid rgba(255, 255, 255, 0.15); 
             box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1); 
         }
-        .nav-left { display: flex; align-items: center; gap: 20px; }
+        .nav-left { display: flex; align-items: center; gap: 20px; flex-shrink: 0; }
         
         .header-profile { display: flex; flex-direction: column; justify-content: center; }
         .header-name { color: var(--text-main); font-size: 1.4rem; margin: 0; line-height: 1.2; letter-spacing: -0.5px; }
         .header-title { color: var(--text-sub); font-size: 0.85rem; font-weight: 600; margin: 0; text-transform: uppercase; letter-spacing: 1px; }
 
         /* --- TOP MIDDLE NAVIGATION --- */
+        /* Fixed: Removed position absolute to prevent overlapping logo at 175% zoom */
         .nav-links {
-            position: absolute;
-            left: 50%;
-            transform: translateX(-50%);
             display: flex;
             list-style: none;
-            gap: 15px;
-            margin: 0;
+            gap: 12px;
+            margin: 0 auto;
             padding: 0;
             align-items: center;
+            flex-wrap: nowrap;
         }
 
         .nav-links li a {
@@ -86,7 +106,7 @@
             box-shadow: inset 3px 3px 6px var(--shadow-dark), inset -3px -3px 6px var(--shadow-light);
         }
         
-        .theme-toggle-wrapper { position: static; } 
+        .theme-toggle-wrapper { position: static; flex-shrink: 0; } 
 
         /* --- DASHBOARD LAYOUT & NEU CARDS --- */
         .dashboard-content {
@@ -96,7 +116,6 @@
             display: flex;
             flex-direction: column;
             gap: 30px;
-            transition: margin-left 0.5s;
         }
 
         .neu-card {
@@ -149,7 +168,8 @@
         .stat-card p { color: var(--text-sub); font-size: 1rem; line-height: 1.5; }
 
         /* Responsive adjustments */
-        @media (max-width: 1024px) {
+        /* Increased breakpoint to 1280px to cleanly switch to hamburger before overlap occurs at 175% zoom */
+        @media (max-width: 1280px) {
             .nav-links { display: none; } /* Hides top menu on smaller screens or when zoomed in */
             .menuButton { display: flex; } /* Shows the hamburger menu icon */
         }
@@ -392,18 +412,13 @@
         // 1. Sidebar Interaction Logic
         const burgerBtn = document.getElementById('burgerBtn');
         const sideMenu = document.getElementById('sideMenu');
-        const mainContent = document.getElementById('mainContent');
         const burgerCheckbox = document.getElementById('check');
         
-        burgerBtn.addEventListener('click', () => {
-            sideMenu.classList.toggle('active');
-            
-            if (window.innerWidth > 768) {
-                if (sideMenu.classList.contains('active')) {
-                    mainContent.style.marginLeft = "120px";
-                } else {
-                    mainContent.style.marginLeft = "0px";
-                }
+        burgerCheckbox.addEventListener('change', () => {
+            if (burgerCheckbox.checked) {
+                sideMenu.classList.add('active');
+            } else {
+                sideMenu.classList.remove('active');
             }
         });
 
@@ -412,44 +427,101 @@
         sidebarLinks.forEach(link => {
             link.addEventListener('click', () => {
                 sideMenu.classList.remove('active');
-                burgerCheckbox.checked = false; // Reset the burger icon animation
-                if (window.innerWidth > 768) {
-                    mainContent.style.marginLeft = "0px";
+                burgerCheckbox.checked = false;
+            });
+        });
+
+        // Auto-close sidebar when clicking outside the menu
+        document.addEventListener('click', (e) => {
+            if (sideMenu.classList.contains('active') && 
+                !sideMenu.contains(e.target) && 
+                !burgerBtn.contains(e.target)) {
+                sideMenu.classList.remove('active');
+                burgerCheckbox.checked = false;
+            }
+        });
+
+        // 3. Optimized ScrollSpy & Click-to-Scroll Logic
+        const sections = document.querySelectorAll("section[id], h1[id], h2[id], button[id='resume']");
+        const navItems = document.querySelectorAll(".nav-item");
+        const sideItems = document.querySelectorAll(".side-item");
+        let isClickScrolling = false;
+        let scrollTimeout;
+
+        function updateActiveNav(targetId) {
+            navItems.forEach((item) => {
+                item.classList.remove("active");
+                if (item.getAttribute("href") === `#${targetId}`) {
+                    item.classList.add("active");
+                }
+            });
+            sideItems.forEach((item) => {
+                item.classList.remove("active");
+                if (item.getAttribute("href") === `#${targetId}`) {
+                    item.classList.add("active");
+                }
+            });
+        }
+
+        // Attach click listeners to all navigation links for immediate highlight & precise smooth scrolling
+        const allLinks = document.querySelectorAll('.nav-links a[href^="#"], .sidebar-menu a[href^="#"]');
+        allLinks.forEach(link => {
+            link.addEventListener('click', function(e) {
+                const targetId = this.getAttribute('href').substring(1);
+                if (!targetId) return; // Skip Contact modal anchor
+                
+                const targetElement = document.getElementById(targetId);
+                if (targetElement) {
+                    e.preventDefault();
+                    isClickScrolling = true;
+                    
+                    // Immediately highlight the clicked item
+                    updateActiveNav(targetId);
+
+                    // Calculate precise scroll position accounting for fixed 90px navbar
+                    const navHeight = 90;
+                    const elementPosition = targetElement.getBoundingClientRect().top;
+                    const offsetPosition = elementPosition + window.pageYOffset - navHeight;
+
+                    window.scrollTo({
+                        top: targetId === 'home' ? 0 : offsetPosition,
+                        behavior: 'smooth'
+                    });
+
+                    // Re-enable automatic scrollspy after smooth scroll animation completes
+                    clearTimeout(scrollTimeout);
+                    scrollTimeout = setTimeout(() => {
+                        isClickScrolling = false;
+                    }, 800);
                 }
             });
         });
 
-        // 3. ScrollSpy Navigation Highlighting Logic
-        const sections = document.querySelectorAll("section[id], h1[id], h2[id], button[id='resume']");
-        const navItems = document.querySelectorAll(".nav-item");
-        const sideItems = document.querySelectorAll(".side-item");
-
         window.addEventListener("scroll", () => {
-            let current = "";
-            
-            sections.forEach((section) => {
-                const sectionTop = section.offsetTop;
-                // Offset calculation ensures the active state changes precisely
-                if (window.scrollY >= (sectionTop - 150)) {
-                    current = section.getAttribute("id");
-                }
-            });
+            if (isClickScrolling) return; // Do not override active state during click smooth-scrolling
 
-            // Update Desktop Navbar Highlights
-            navItems.forEach((item) => {
-                item.classList.remove("active");
-                if (item.getAttribute("href") === `#${current}`) {
-                    item.classList.add("active");
-                }
-            });
+            let current = "home";
+            const scrollPosition = window.scrollY + 110; // 90px navbar + 20px buffer
 
-            // Update Mobile Sidebar Highlights
-            sideItems.forEach((item) => {
-                item.classList.remove("active");
-                if (item.getAttribute("href") === `#${current}`) {
-                    item.classList.add("active");
-                }
-            });
+            // Always highlight Home when at or near the top of the webpage
+            if (window.scrollY < 60) {
+                current = "home";
+            } 
+            // Accurately catch the bottom-most section when scrolled to the end of the document
+            else if (window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 20) {
+                const lastSection = sections[sections.length - 1];
+                if (lastSection) current = lastSection.getAttribute("id");
+            } 
+            // Otherwise, detect the closest section above the reading line
+            else {
+                sections.forEach((section) => {
+                    if (scrollPosition >= section.offsetTop) {
+                        current = section.getAttribute("id");
+                    }
+                });
+            }
+
+            updateActiveNav(current);
         });
 
         // 4. Contact Modal Logic
@@ -463,26 +535,24 @@
         function openModal(e) {
             if(e) e.preventDefault();
             contactModal.classList.add('active');
+            sideMenu.classList.remove('active');
+            burgerCheckbox.checked = false;
         }
 
-        // Open Modal from various buttons
         openContactBtn.addEventListener('click', openModal);
         navContactBtn.addEventListener('click', openModal);
         sideContactBtn.addEventListener('click', openModal);
 
-        // Close Modal via X button
         closeContactBtn.addEventListener('click', () => {
             contactModal.classList.remove('active');
         });
 
-        // Close Modal if clicking outside the card
         window.addEventListener('click', (e) => {
             if (e.target === contactModal) {
                 contactModal.classList.remove('active');
             }
         });
 
-        // Handle Form Submission
         contactForm.addEventListener('submit', (e) => {
             e.preventDefault(); 
             alert("Thank you! Your message has been sent successfully.");
