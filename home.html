@@ -134,24 +134,14 @@
         }
 
         @keyframes scan {
-            0%, 50%, 100% {
-                top: 0px;
-            }
-            25%, 75% {
-                top: 26px; 
-            }
+            0%, 50%, 100% { top: 0px; }
+            25%, 75% { top: 26px; }
         }
 
         @keyframes cut {
-            0%, 75%, 100% {
-                clip-path: inset(0 0 0 0);
-            }
-            25% {
-                clip-path: inset(100% 0 0 0);
-            }
-            50% {
-                clip-path: inset(0 0 100% 0);
-            }
+            0%, 75%, 100% { clip-path: inset(0 0 0 0); }
+            25% { clip-path: inset(100% 0 0 0); }
+            50% { clip-path: inset(0 0 100% 0); }
         }
 
         /* --- TOP MIDDLE NAVIGATION --- */
@@ -207,17 +197,25 @@
             border: 1px solid rgba(255, 255, 255, 0.05);
         }
 
-        /* --- HERO SECTION REDESIGN (LEFT ALIGNED) --- */
+        /* --- HERO SECTION REDESIGN --- */
         .hero-section { 
-            text-align: left; 
-            display: flex; 
-            flex-direction: column; 
-            align-items: flex-start; 
-            justify-content: center;
+            display: grid; 
+            grid-template-columns: 1fr 1fr; 
+            gap: 40px; 
+            align-items: center; 
+            justify-content: space-between;
             padding: 50px 40px;
         }
+
+        .hero-left {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            text-align: left;
+            width: 100%;
+        }
         
-        .hero-section h1 { 
+        .hero-left h1 { 
             font-size: 3.2rem; 
             color: var(--text-main); 
             margin-bottom: 10px; 
@@ -226,57 +224,165 @@
             line-height: 1.1;
         }
 
-        /* Animated Typing Container */
         .typing-container {
             font-size: 1.5rem;
             color: var(--text-sub);
             font-weight: 600;
             margin-bottom: 35px;
-            min-height: 40px; /* Prevents vertical shift while deleting */
+            min-height: 40px;
             display: flex;
             align-items: center;
             flex-wrap: wrap;
         }
 
-        .typing-text {
-            color: #3D7EAE; /* Brand accent color */
-            font-weight: 700;
+        .typing-text { color: #3D7EAE; font-weight: 700; }
+        .typing-cursor {
+            display: inline-block; margin-left: 4px; color: var(--text-main);
+            font-weight: 700; animation: blink-cursor 0.8s infinite;
+        }
+        @keyframes blink-cursor { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
+
+        .hero-buttons { 
+            display: flex; gap: 16px; flex-wrap: wrap; 
+            justify-content: flex-start; width: 100%; align-items: center;
+        }
+        .hero-buttons .metal-btn-wrapper { width: auto; margin-top: 0; }
+        .hero-buttons a.neu-button { text-decoration: none; gap: 10px; display: inline-flex; align-items: center; justify-content: center; }
+
+        /* Right Profile Card */
+        .hero-right { display: flex; justify-content: center; align-items: center; width: 100%; }
+        .profile-card {
+            width: 100%; max-width: 320px; height: 420px; position: relative; border-radius: 20px; padding: 16px;
+            background: var(--bg-color); box-shadow: 12px 12px 24px var(--shadow-dark), -12px -12px 24px var(--shadow-light);
+            border: 2px solid rgba(255, 255, 255, 0.2); overflow: hidden; cursor: pointer;
+            animation: float-idle 6s ease-in-out infinite; transition: box-shadow 0.4s ease, border-color 0.4s ease;
+            transform-style: preserve-3d; will-change: transform;
         }
 
-        .typing-cursor {
-            display: inline-block;
-            margin-left: 4px;
+        [data-theme="dark"] .profile-card { background: rgba(32, 36, 49, 0.7); backdrop-filter: blur(16px); border: 1px solid rgba(255, 255, 255, 0.08); }
+        @keyframes float-idle { 0%, 100% { transform: translateY(0px); } 50% { transform: translateY(-8px); } }
+        
+        .profile-card:hover { box-shadow: 16px 16px 32px var(--shadow-dark), -16px -16px 32px var(--shadow-light); border-color: #3D7EAE; }
+
+        .card-front {
+            position: absolute; inset: 16px; display: flex; flex-direction: column; justify-content: space-between;
+            align-items: center; text-align: center; transition: transform 1.1s cubic-bezier(0.785, 0.135, 0.150, 0.860); z-index: 2;
+        }
+        .card-image-wrapper { width: 100%; height: 70%; border-radius: 14px; overflow: hidden; box-shadow: inset 3px 3px 6px var(--shadow-dark), inset -3px -3px 6px var(--shadow-light); position: relative; background: var(--bg-color); }
+        .card-image-wrapper img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform 0.6s ease; }
+        .profile-card:hover .card-image-wrapper img { transform: scale(1.05); }
+
+        .card-front-info { width: 100%; height: 28%; display: flex; flex-direction: column; justify-content: center; align-items: center; }
+        .card-front-info .title { font-size: 1.25rem; font-weight: 800; color: var(--text-main); line-height: 1.2; margin-bottom: 4px; }
+        .card-front-info .title::after { content: ""; display: block; width: 40px; height: 3px; border-radius: 2px; margin: 6px auto 4px; background-color: #3D7EAE; }
+        .card-front-info .subtitle { font-size: 0.85rem; font-weight: 600; color: var(--text-sub); text-transform: uppercase; letter-spacing: 1px; }
+
+        .card-back {
+            position: absolute; inset: 16px; display: flex; flex-direction: column; justify-content: center; align-items: center;
+            text-align: center; padding: 24px; transform: translateX(120%); transition: transform 1.1s cubic-bezier(0.785, 0.135, 0.150, 0.860);
+            z-index: 1; background: var(--bg-color); border-radius: 14px; box-shadow: inset 4px 4px 8px var(--shadow-dark), inset -4px -4px 8px var(--shadow-light);
+        }
+        [data-theme="dark"] .card-back { background: rgba(255, 255, 255, 0.02); }
+        .card-back h3 { font-size: 1.5rem; font-weight: 800; color: var(--text-main); margin-bottom: 12px; letter-spacing: -0.5px; }
+        .card-back h3::after { content: ""; display: block; width: 30px; height: 3px; border-radius: 2px; margin: 8px auto 0; background-color: #3D7EAE; }
+        .card-back p { font-size: 1rem; font-style: italic; color: var(--text-sub); line-height: 1.6; margin-top: 10px; }
+
+        .profile-card:hover .card-front { transform: translateX(-120%); }
+        .profile-card:hover .card-back { transform: translateX(0); }
+
+        /* --- ABOUT ME SECTION REDESIGN --- */
+        .about-wrapper {
+            padding: 40px 0;
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+        }
+
+        .about-punchline {
+            font-size: 3.5rem;
+            color: var(--text-main);
+            font-weight: 800;
+            margin-bottom: 30px;
+            line-height: 1.1;
+            letter-spacing: -1px;
+        }
+
+        .about-description {
+            font-size: 1.15rem;
+            color: var(--text-sub);
+            line-height: 1.7;
+            max-width: 850px;
+            margin-bottom: 50px;
+            display: flex;
+            flex-direction: column;
+            gap: 18px;
+        }
+
+        .about-cards {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 30px;
+        }
+
+        .about-card {
+            padding: 40px 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            justify-content: center;
+        }
+
+        .about-card:hover {
+            transform: translateY(-8px);
+            border-color: rgba(61, 126, 174, 0.4);
+        }
+
+        .card-number {
+            font-size: 3.8rem;
+            font-weight: 800;
+            color: #3D7EAE;
+            margin-bottom: 10px;
+            line-height: 1;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+        }
+
+        [data-theme="dark"] .card-number {
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .card-title {
+            font-size: 1.25rem;
             color: var(--text-main);
             font-weight: 700;
-            animation: blink-cursor 0.8s infinite;
+            margin-bottom: 6px;
         }
 
-        @keyframes blink-cursor {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0; }
+        .card-subtitle {
+            font-size: 0.95rem;
+            color: var(--text-sub);
+            line-height: 1.5;
         }
 
-        /* Social Action Buttons Row */
-        .hero-buttons { 
-            display: flex; 
-            gap: 16px; 
-            flex-wrap: wrap; 
-            justify-content: flex-start; 
-            width: 100%;
-            align-items: center;
+        /* Reusable Fade Up Animation */
+        .fade-up {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.8s cubic-bezier(0.2, 0.8, 0.2, 1), transform 0.8s cubic-bezier(0.2, 0.8, 0.2, 1);
+        }
+        
+        .fade-up.in-view {
+            opacity: 1;
+            transform: translateY(0);
         }
 
-        .hero-buttons .metal-btn-wrapper { 
-            width: auto; 
-            margin-top: 0; 
+        .loading-pulse {
+            animation: pulse 1.5s infinite ease-in-out;
         }
 
-        .hero-buttons a.neu-button {
-            text-decoration: none;
-            gap: 10px;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
+        @keyframes pulse {
+            0%, 100% { opacity: 0.4; }
+            50% { opacity: 1; }
         }
 
         /* --- SECTION TITLES --- */
@@ -287,7 +393,7 @@
             margin-bottom: -10px;
             padding-left: 10px;
             border-left: 4px solid #3D7EAE;
-            scroll-margin-top: 110px; /* For smooth scrolling exact positioning */
+            scroll-margin-top: 110px; 
         }
 
         /* --- STATS GRID --- */
@@ -313,84 +419,53 @@
             .menuButton { display: flex; }
         }
 
+        @media (max-width: 900px) {
+            .hero-section { grid-template-columns: 1fr; gap: 50px; padding: 40px 25px; text-align: center; }
+            .hero-left { align-items: center; text-align: center; }
+            .hero-buttons { justify-content: center; }
+            .profile-card { max-width: 300px; height: 400px; }
+            
+            /* About Section Tablet 2+1 Layout */
+            .about-cards { grid-template-columns: repeat(2, 1fr); }
+            .about-card:last-child { grid-column: span 2; }
+        }
+
         @media (max-width: 768px) {
             .navbar { padding: 15px 20px; }
-            .hero-section { padding: 35px 25px; }
-            .hero-section h1 { font-size: 2.2rem; }
+            .hero-left h1 { font-size: 2.2rem; }
             .typing-container { font-size: 1.25rem; min-height: 35px; margin-bottom: 28px; }
             .header-name.scan-logo { font-size: 1.1rem; }
             .header-title { font-size: 0.7rem; }
+            
+            .about-punchline { font-size: 2.6rem; }
+            .about-description { font-size: 1.05rem; }
         }
 
         @media (max-width: 600px) {
-            .hero-buttons {
-                flex-direction: column;
-                width: 100%;
-                gap: 12px;
-            }
-            .hero-buttons .metal-btn-wrapper,
-            .hero-buttons .metal-btn-wrapper a.neu-button {
-                width: 100%;
-            }
+            .hero-buttons { flex-direction: column; width: 100%; gap: 12px; }
+            .hero-buttons .metal-btn-wrapper, .hero-buttons .metal-btn-wrapper a.neu-button { width: 100%; }
+            
+            /* About Section Mobile Vertical Stack */
+            .about-cards { grid-template-columns: 1fr; }
+            .about-card:last-child { grid-column: span 1; }
+            .card-number { font-size: 3.2rem; }
         }
 
         @media (max-width: 480px) {
-            .hero-section h1 { font-size: 1.8rem; }
+            .hero-left h1 { font-size: 1.8rem; }
             .typing-container { font-size: 1.1rem; min-height: 32px; }
+            .profile-card { max-width: 280px; height: 380px; }
+            .about-punchline { font-size: 2rem; }
         }
 
         /* --- CONTACT MODAL STYLING --- */
-        .contact-overlay {
-            display: none; 
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: var(--overlay-bg);
-            backdrop-filter: blur(8px);
-            z-index: 2000;
-            justify-content: center;
-            align-items: center;
-            opacity: 0;
-            transition: opacity 0.3s ease;
-        }
-
-        .contact-overlay.active {
-            display: flex;
-            opacity: 1;
-        }
-
-        .contact-card {
-            position: relative;
-            width: 100%;
-            max-width: 500px;
-            margin: 20px;
-            padding-top: 50px; 
-        }
-
-        .close-btn {
-            position: absolute;
-            top: 20px;
-            right: 25px;
-            font-size: 30px;
-            color: var(--text-sub);
-            cursor: pointer;
-            transition: color 0.3s;
-        }
-
-        .close-btn:hover {
-            color: var(--text-main);
-        }
-
-        .input-group textarea {
-            width: 100%; padding: 14px; background: var(--bg-color);
-            border: none; border-radius: 12px; color: var(--input-text); font-size: 14px; outline: none;
-            box-shadow: inset 5px 5px 10px var(--shadow-dark), inset -5px -5px 10px var(--shadow-light);
-            resize: vertical; 
-            font-family: inherit;
-        }
-
-        .input-group textarea:focus {
-            box-shadow: inset 3px 3px 6px var(--shadow-dark), inset -3px -3px 6px var(--shadow-light), 0 0 0 2px rgba(79, 179, 232, 0.3);
-        }
+        .contact-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--overlay-bg); backdrop-filter: blur(8px); z-index: 2000; justify-content: center; align-items: center; opacity: 0; transition: opacity 0.3s ease; }
+        .contact-overlay.active { display: flex; opacity: 1; }
+        .contact-card { position: relative; width: 100%; max-width: 500px; margin: 20px; padding-top: 50px; }
+        .close-btn { position: absolute; top: 20px; right: 25px; font-size: 30px; color: var(--text-sub); cursor: pointer; transition: color 0.3s; }
+        .close-btn:hover { color: var(--text-main); }
+        .input-group textarea { width: 100%; padding: 14px; background: var(--bg-color); border: none; border-radius: 12px; color: var(--input-text); font-size: 14px; outline: none; box-shadow: inset 5px 5px 10px var(--shadow-dark), inset -5px -5px 10px var(--shadow-light); resize: vertical; font-family: inherit; }
+        .input-group textarea:focus { box-shadow: inset 3px 3px 6px var(--shadow-dark), inset -3px -3px 6px var(--shadow-light), 0 0 0 2px rgba(79, 179, 232, 0.3); }
     </style>
 </head>
 <body>
@@ -405,7 +480,6 @@
                 <span class="bot"></span>
             </label>
             <div class="header-profile">
-                <!-- LOGO TEXT USING REAL WEBSITE FONT -->
                 <h1 class="header-name scan-logo"><span data-text="Arif">Arif</span></h1>
                 <p class="header-title">Software Engineer</p>
             </div>
@@ -463,48 +537,97 @@
     <!-- MAIN DASHBOARD CONTENT -->
     <main class="dashboard-content" id="mainContent">
         
-        <!-- Hero Card (Acts as Home & About) -->
+        <!-- Hero Section -->
         <section class="hero-section neu-card" id="home">
             <span id="resume" style="display: none;"></span>
             
-            <h1 id="about">Arif Imtiaz Rakib</h1>
-            
-            <div class="typing-container">
-                <span id="typing-text" class="typing-text"></span><span class="typing-cursor">|</span>
+            <div class="hero-left">
+                <h1>Arif Imtiaz Rakib</h1>
+                
+                <div class="typing-container">
+                    <span id="typing-text" class="typing-text"></span><span class="typing-cursor">|</span>
+                </div>
+
+                <div class="hero-buttons">
+                    <div class="metal-btn-wrapper">
+                        <div class="metal-btn-inner"></div>
+                        <a href="https://github.com/rakib-arif339" target="_blank" rel="noopener noreferrer" class="neu-button">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z"/></svg>
+                            <span>GitHub</span>
+                        </a>
+                    </div>
+
+                    <div class="metal-btn-wrapper">
+                        <div class="metal-btn-inner"></div>
+                        <a href="#" target="_blank" rel="noopener noreferrer" class="neu-button">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/></svg>
+                            <span>LinkedIn</span>
+                        </a>
+                    </div>
+
+                    <div class="metal-btn-wrapper">
+                        <div class="metal-btn-inner"></div>
+                        <a href="mailto:arifimtiazrakib@gmail.com" class="neu-button">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
+                            <span>Email</span>
+                        </a>
+                    </div>
+                </div>
             </div>
 
-            <div class="hero-buttons">
-                <!-- GitHub Button -->
-                <div class="metal-btn-wrapper">
-                    <div class="metal-btn-inner"></div>
-                    <a href="https://github.com/rakib-arif339" target="_blank" rel="noopener noreferrer" class="neu-button">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z"/></svg>
-                        <span>GitHub</span>
-                    </a>
+            <div class="hero-right">
+                <div class="profile-card">
+                    <div class="card-front">
+                        <div class="card-image-wrapper">
+                            <img src="https://via.placeholder.com/300x350/3D7EAE/FFFFFF?text=Arif+Rakib" alt="Arif Imtiaz Rakib Profile Image" id="profileImage">
+                        </div>
+                        <div class="card-front-info">
+                            <p class="title">Arif Imtiaz Rakib</p>
+                            <p class="subtitle">Software Engineering</p>
+                        </div>
+                    </div>
+                    <div class="card-back">
+                        <h3>Keep Building.</h3>
+                        <p>"Build. Break. Learn. Repeat."</p>
+                    </div>
                 </div>
+            </div>
+        </section>
 
-                <!-- LinkedIn Button -->
-                <div class="metal-btn-wrapper">
-                    <div class="metal-btn-inner"></div>
-                    <a href="#" target="_blank" rel="noopener noreferrer" class="neu-button">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/></svg>
-                        <span>LinkedIn</span>
-                    </a>
+        <!-- ABOUT SECTION -->
+        <section class="about-wrapper" id="about">
+            <h2 class="about-punchline fade-up">Building ideas into experiences.</h2>
+            
+            <div class="about-description fade-up">
+                <p>I'm Arif Imtiaz Rakib, a Software Engineering student at Daffodil International University (DIU).</p>
+                <p>I enjoy building modern web applications, learning backend technologies, solving programming problems, and continuously improving my software development skills.</p>
+                <p>I'm also passionate about cybersecurity, photography, and clean minimalist design. My goal is to create secure, scalable, and meaningful digital experiences.</p>
+            </div>
+
+            <div class="about-cards fade-up">
+                <div class="neu-card about-card">
+                    <div class="card-number">2024</div>
+                    <h3 class="card-title">B.Sc. Started</h3>
+                    <p class="card-subtitle">Software Engineering<br>Daffodil International University</p>
                 </div>
-
-                <!-- Email Button -->
-                <div class="metal-btn-wrapper">
-                    <div class="metal-btn-inner"></div>
-                    <a href="mailto:arifimtiazrakib@gmail.com" class="neu-button">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
-                        <span>Email</span>
-                    </a>
+                
+                <div class="neu-card about-card">
+                    <div class="card-number">2028</div>
+                    <h3 class="card-title">Expected Graduation</h3>
+                    <p class="card-subtitle">Bachelor of Science<br>Software Engineering</p>
+                </div>
+                
+                <div class="neu-card about-card">
+                    <div class="card-number loading-pulse" id="github-repo-count">...</div>
+                    <h3 class="card-title">GitHub Repositories</h3>
+                    <p class="card-subtitle">Public Projects</p>
                 </div>
             </div>
         </section>
 
         <!-- Stats / Skills Grid -->
         <section class="stats-grid" id="skills">
+            <h2 class="section-title" style="grid-column: 1 / -1; margin-top: 20px;">Skills & Competencies</h2>
             <div class="stat-card neu-card">
                 <h3>Frontend Engineering</h3>
                 <p>Building responsive, pixel-perfect interfaces utilizing React, modern HTML5, and Tailwind CSS. Obsessed with Glassmorphism and modern UI/UX principles.</p>
@@ -522,13 +645,11 @@
         </section>
 
         <h2 class="section-title" id="projects">Featured Projects</h2>
-        
         <section class="stats-grid">
             <div class="stat-card neu-card">
                 <h3>DeshExport AI</h3>
                 <p>An AI-powered platform designed to connect rural women artisans directly with global export markets, bridging the gap between local talent and international buyers.</p>
             </div>
-
             <div class="stat-card neu-card">
                 <h3>AcademiaVault</h3>
                 <p>A comprehensive relational database management system (DBMS) architected to organize and streamline complex academic institution data efficiently.</p>
@@ -536,13 +657,11 @@
         </section>
 
         <h2 class="section-title" id="education">Experience & Leadership</h2>
-
         <section class="stats-grid">
             <div class="stat-card neu-card">
                 <h3>GoEdu Campus Ambassador</h3>
                 <p>Representing GoEdu for Season 3, actively promoting educational initiatives and fostering a community of continuous technical learning on campus.</p>
             </div>
-
             <div class="stat-card neu-card">
                 <h3>Technopreneurship 2026 Finalist</h3>
                 <p>Selected as a finalist for the Technopreneurship program, engaging in kick-off sessions and developing innovative, market-ready business solutions.</p>
@@ -550,13 +669,11 @@
         </section>
 
         <h2 class="section-title" id="certificates">Academic Background</h2>
-        
         <section class="stats-grid">
             <div class="stat-card neu-card">
                 <h3>Software Engineering</h3>
                 <p>Currently pursuing a Bachelor's degree at Daffodil International University (DIU), building a strong foundation in modern software architecture, OOP, and agile development.</p>
             </div>
-            
             <div class="stat-card neu-card">
                 <h3>Academic Excellence</h3>
                 <p>Consistently demonstrated high academic performance, achieving a perfect GPA of 5.00 in both Secondary School Certificate (SSC) and Higher Secondary Certificate (HSC) examinations.</p>
@@ -577,17 +694,14 @@
                     <label for="contactName">Full Name</label>
                     <input type="text" id="contactName" placeholder="John Doe" required>
                 </div>
-
                 <div class="input-group">
                     <label for="contactEmail">Email Address</label>
                     <input type="email" id="contactEmail" placeholder="name@example.com" required>
                 </div>
-
                 <div class="input-group">
                     <label for="contactMessage">Message</label>
                     <textarea id="contactMessage" rows="5" placeholder="Write your message here..." required></textarea>
                 </div>
-
                 <div class="metal-btn-wrapper">
                     <div class="metal-btn-inner"></div>
                     <button type="submit" class="neu-button">Send Message</button>
@@ -614,7 +728,6 @@
             }
         });
 
-        // 2. Auto-close Sidebar on Link Click
         const sidebarLinks = document.querySelectorAll('.sidebar-menu .value');
         sidebarLinks.forEach(link => {
             link.addEventListener('click', () => {
@@ -623,7 +736,6 @@
             });
         });
 
-        // Auto-close sidebar when clicking outside the menu
         document.addEventListener('click', (e) => {
             if (sideMenu.classList.contains('active') && 
                 !sideMenu.contains(e.target) && 
@@ -633,7 +745,7 @@
             }
         });
 
-        // 3. Optimized ScrollSpy & Click-to-Scroll Logic
+        // 2. Optimized ScrollSpy & Click-to-Scroll Logic
         const sections = document.querySelectorAll("section[id], h1[id], h2[id], [id='resume']");
         const navItems = document.querySelectorAll(".nav-item");
         const sideItems = document.querySelectorAll(".side-item");
@@ -709,7 +821,7 @@
             updateActiveNav(current);
         });
 
-        // 4. Contact Modal Logic
+        // 3. Contact Modal Logic
         const openContactBtn = document.getElementById('openContactBtn');
         const closeContactBtn = document.getElementById('closeContactBtn');
         const contactModal = document.getElementById('contactModal');
@@ -749,7 +861,7 @@
             });
         }
 
-        // 5. Hero Section Animated Typing Engine
+        // 4. Hero Section Animated Typing Engine
         const typingTitles = [
             "Software Engineering Student",
             "Python Developer",
@@ -791,8 +903,43 @@
 
             setTimeout(runTypingLoop, nextDelay);
         }
-
         setTimeout(runTypingLoop, 500);
+
+        // 5. GitHub Public API Integration
+        async function fetchGitHubRepos() {
+            const repoCountEl = document.getElementById('github-repo-count');
+            if (!repoCountEl) return;
+            
+            try {
+                const response = await fetch('https://api.github.com/users/rakib-arif339');
+                if (!response.ok) throw new Error('Network response was not ok');
+                const data = await response.json();
+                
+                repoCountEl.classList.remove('loading-pulse');
+                repoCountEl.textContent = data.public_repos;
+            } catch (error) {
+                repoCountEl.classList.remove('loading-pulse');
+                repoCountEl.textContent = "Unavailable";
+                repoCountEl.style.fontSize = "1.8rem"; 
+            }
+        }
+        fetchGitHubRepos();
+
+        // 6. About Section Fade-Up Observer
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: "0px 0px -50px 0px"
+        };
+        const fadeObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('in-view');
+                    fadeObserver.unobserve(entry.target);
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.fade-up').forEach(el => fadeObserver.observe(el));
     </script>
 </body>
 </html>
