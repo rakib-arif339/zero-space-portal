@@ -81,8 +81,8 @@
             color: var(--text-sub);
             font-size: 1.4rem;
             position: relative;
-            font-family: "Helvetica Neue", "Arial", sans-serif; /* Explicitly matching website real font */
-            font-style: normal; /* Removed italic */
+            font-family: "Helvetica Neue", "Arial", sans-serif;
+            font-style: normal;
             font-weight: 700;
             margin: 0;
             line-height: 1.2;
@@ -103,7 +103,6 @@
             color: var(--text-main);
         }
         
-        /* Blurred Soft Light Scan Line */
         .header-name.scan-logo::after {
             position: absolute;
             content: "";
@@ -119,7 +118,6 @@
             transition: 1s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
 
-        /* Luminous Front Razor Scan Line */
         .header-name.scan-logo::before {
             position: absolute;
             content: "";
@@ -209,12 +207,77 @@
             border: 1px solid rgba(255, 255, 255, 0.05);
         }
 
-        /* --- HERO SECTION --- */
-        .hero-section { text-align: center; display: flex; flex-direction: column; align-items: center; justify-content: center; }
-        .hero-section h1 { font-size: 3rem; color: var(--text-main); margin-bottom: 15px; letter-spacing: -1px; }
-        .hero-section p { font-size: 1.1rem; color: var(--text-sub); max-width: 650px; line-height: 1.6; margin-bottom: 30px; }
-        .hero-buttons { display: flex; gap: 20px; flex-wrap: wrap; justify-content: center; }
-        .hero-buttons .metal-btn-wrapper { width: auto; margin-top: 0; }
+        /* --- HERO SECTION REDESIGN (LEFT ALIGNED) --- */
+        .hero-section { 
+            text-align: left; 
+            display: flex; 
+            flex-direction: column; 
+            align-items: flex-start; 
+            justify-content: center;
+            padding: 50px 40px;
+        }
+        
+        .hero-section h1 { 
+            font-size: 3.2rem; 
+            color: var(--text-main); 
+            margin-bottom: 10px; 
+            letter-spacing: -1px;
+            font-weight: 800;
+            line-height: 1.1;
+        }
+
+        /* Animated Typing Container */
+        .typing-container {
+            font-size: 1.5rem;
+            color: var(--text-sub);
+            font-weight: 600;
+            margin-bottom: 35px;
+            min-height: 40px; /* Prevents vertical shift while deleting */
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .typing-text {
+            color: #3D7EAE; /* Brand accent color */
+            font-weight: 700;
+        }
+
+        .typing-cursor {
+            display: inline-block;
+            margin-left: 4px;
+            color: var(--text-main);
+            font-weight: 700;
+            animation: blink-cursor 0.8s infinite;
+        }
+
+        @keyframes blink-cursor {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0; }
+        }
+
+        /* Social Action Buttons Row */
+        .hero-buttons { 
+            display: flex; 
+            gap: 16px; 
+            flex-wrap: wrap; 
+            justify-content: flex-start; 
+            width: 100%;
+            align-items: center;
+        }
+
+        .hero-buttons .metal-btn-wrapper { 
+            width: auto; 
+            margin-top: 0; 
+        }
+
+        .hero-buttons a.neu-button {
+            text-decoration: none;
+            gap: 10px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
 
         /* --- SECTION TITLES --- */
         .section-title {
@@ -252,9 +315,28 @@
 
         @media (max-width: 768px) {
             .navbar { padding: 15px 20px; }
+            .hero-section { padding: 35px 25px; }
             .hero-section h1 { font-size: 2.2rem; }
+            .typing-container { font-size: 1.25rem; min-height: 35px; margin-bottom: 28px; }
             .header-name.scan-logo { font-size: 1.1rem; }
             .header-title { font-size: 0.7rem; }
+        }
+
+        @media (max-width: 600px) {
+            .hero-buttons {
+                flex-direction: column;
+                width: 100%;
+                gap: 12px;
+            }
+            .hero-buttons .metal-btn-wrapper,
+            .hero-buttons .metal-btn-wrapper a.neu-button {
+                width: 100%;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .hero-section h1 { font-size: 1.8rem; }
+            .typing-container { font-size: 1.1rem; min-height: 32px; }
         }
 
         /* --- CONTACT MODAL STYLING --- */
@@ -383,16 +465,40 @@
         
         <!-- Hero Card (Acts as Home & About) -->
         <section class="hero-section neu-card" id="home">
-            <h1 id="about">Building Digital Solutions.</h1>
-            <p>I am a Software Engineering student passionate about crafting efficient, scalable, and aesthetic web applications, leveraging tools like React, Tailwind, and AI Agents to solve modern problems.</p>
+            <span id="resume" style="display: none;"></span>
+            
+            <h1 id="about">Arif Imtiaz Rakib</h1>
+            
+            <div class="typing-container">
+                <span id="typing-text" class="typing-text"></span><span class="typing-cursor">|</span>
+            </div>
+
             <div class="hero-buttons">
+                <!-- GitHub Button -->
                 <div class="metal-btn-wrapper">
                     <div class="metal-btn-inner"></div>
-                    <button class="neu-button" id="resume">View My Work</button>
+                    <a href="https://github.com/rakib-arif339" target="_blank" rel="noopener noreferrer" class="neu-button">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z"/></svg>
+                        <span>GitHub</span>
+                    </a>
                 </div>
+
+                <!-- LinkedIn Button -->
                 <div class="metal-btn-wrapper">
                     <div class="metal-btn-inner"></div>
-                    <button class="neu-button" id="openContactBtn">Contact Me</button>
+                    <a href="#" target="_blank" rel="noopener noreferrer" class="neu-button">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/></svg>
+                        <span>LinkedIn</span>
+                    </a>
+                </div>
+
+                <!-- Email Button -->
+                <div class="metal-btn-wrapper">
+                    <div class="metal-btn-inner"></div>
+                    <a href="mailto:arifimtiazrakib@gmail.com" class="neu-button">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
+                        <span>Email</span>
+                    </a>
                 </div>
             </div>
         </section>
@@ -528,7 +634,7 @@
         });
 
         // 3. Optimized ScrollSpy & Click-to-Scroll Logic
-        const sections = document.querySelectorAll("section[id], h1[id], h2[id], button[id='resume']");
+        const sections = document.querySelectorAll("section[id], h1[id], h2[id], [id='resume']");
         const navItems = document.querySelectorAll(".nav-item");
         const sideItems = document.querySelectorAll(".side-item");
         let isClickScrolling = false;
@@ -618,13 +724,15 @@
             burgerCheckbox.checked = false;
         }
 
-        openContactBtn.addEventListener('click', openModal);
-        navContactBtn.addEventListener('click', openModal);
-        sideContactBtn.addEventListener('click', openModal);
+        if (openContactBtn) openContactBtn.addEventListener('click', openModal);
+        if (navContactBtn) navContactBtn.addEventListener('click', openModal);
+        if (sideContactBtn) sideContactBtn.addEventListener('click', openModal);
 
-        closeContactBtn.addEventListener('click', () => {
-            contactModal.classList.remove('active');
-        });
+        if (closeContactBtn) {
+            closeContactBtn.addEventListener('click', () => {
+                contactModal.classList.remove('active');
+            });
+        }
 
         window.addEventListener('click', (e) => {
             if (e.target === contactModal) {
@@ -632,12 +740,59 @@
             }
         });
 
-        contactForm.addEventListener('submit', (e) => {
-            e.preventDefault(); 
-            alert("Thank you! Your message has been sent successfully.");
-            contactForm.reset(); 
-            contactModal.classList.remove('active'); 
-        });
+        if (contactForm) {
+            contactForm.addEventListener('submit', (e) => {
+                e.preventDefault(); 
+                alert("Thank you! Your message has been sent successfully.");
+                contactForm.reset(); 
+                contactModal.classList.remove('active'); 
+            });
+        }
+
+        // 5. Hero Section Animated Typing Engine
+        const typingTitles = [
+            "Software Engineering Student",
+            "Python Developer",
+            "Web Developer",
+            "Problem Solver",
+            "Cybersecurity Enthusiast"
+        ];
+        let typeTitleIndex = 0;
+        let typeCharIndex = 0;
+        let isDeletingTitle = false;
+        const typeSpeed = 90; 
+        const deleteSpeed = 40; 
+        const pauseAfterComplete = 1800; 
+        const pauseAfterClear = 400; 
+
+        function runTypingLoop() {
+            const currentTitle = typingTitles[typeTitleIndex];
+            const typingElement = document.getElementById("typing-text");
+            if (!typingElement) return;
+
+            if (isDeletingTitle) {
+                typingElement.textContent = currentTitle.substring(0, typeCharIndex - 1);
+                typeCharIndex--;
+            } else {
+                typingElement.textContent = currentTitle.substring(0, typeCharIndex + 1);
+                typeCharIndex++;
+            }
+
+            let nextDelay = isDeletingTitle ? deleteSpeed : typeSpeed;
+
+            if (!isDeletingTitle && typeCharIndex === currentTitle.length) {
+                nextDelay = pauseAfterComplete;
+                isDeletingTitle = true;
+            } else if (isDeletingTitle && typeCharIndex === 0) {
+                isDeletingTitle = false;
+                typeTitleIndex = (typeTitleIndex + 1) % typingTitles.length;
+                nextDelay = pauseAfterClear;
+            }
+
+            setTimeout(runTypingLoop, nextDelay);
+        }
+
+        setTimeout(runTypingLoop, 500);
     </script>
 </body>
 </html>
