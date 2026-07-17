@@ -652,18 +652,6 @@
             <p style="font-size: 1.05rem; color: var(--text-sub); font-weight: 600;">Live Activity & Repository Feed directly from GitHub</p>
         </div>
 
-        <!-- Featured Projects -->
-        <section class="stats-grid" style="margin-bottom: 30px;">
-            <div class="stat-card neu-card">
-                <h3>DeshExport AI</h3>
-                <p>An AI-powered platform designed to connect rural women artisans directly with global export markets, bridging the gap between local talent and international buyers.</p>
-            </div>
-            <div class="stat-card neu-card">
-                <h3>AcademiaVault</h3>
-                <p>A comprehensive relational database management system (DBMS) architected to organize and streamline complex academic institution data efficiently.</p>
-            </div>
-        </section>
-
         <!-- Live GitHub Repositories Grid (Commits Removed) -->
         <section class="stats-grid" id="live-repos-grid">
             <div class="stat-card neu-card loading-pulse" style="grid-column: 1 / -1; text-align: center;">
@@ -1112,6 +1100,22 @@
         }, observerOptions);
 
         document.querySelectorAll('.fade-up').forEach(el => fadeObserver.observe(el));
+
+        // 8. Load custom items created by Rakib Sir from Admin Dashboard
+        const customData = JSON.parse(localStorage.getItem('rakib_portfolio_custom_data') || '[]');
+        customData.forEach(item => {
+            const card = document.createElement('div');
+            card.className = 'stat-card neu-card fade-up in-view';
+            card.innerHTML = `<h3>${item.title}</h3><p>${item.description}</p>`;
+            
+            if (item.category === 'Skill' && document.getElementById('skills')) {
+                document.getElementById('skills').appendChild(card);
+            } else if (item.category === 'Project' && document.getElementById('live-repos-grid')) {
+                document.getElementById('live-repos-grid').appendChild(card);
+            } else if (item.category === 'Experience' && document.getElementById('certificates')) {
+                document.getElementById('certificates').nextElementSibling.appendChild(card);
+            }
+        });
     </script>
 </body>
 </html>
