@@ -73,75 +73,61 @@
         .nav-left { display: flex; align-items: center; gap: 20px; flex-shrink: 0; }
         
         .header-profile { display: flex; flex-direction: column; justify-content: center; }
-        .header-title { color: var(--text-sub); font-size: 0.85rem; font-weight: 600; margin: 0; text-transform: uppercase; letter-spacing: 1px; }
 
-        /* --- UIVERSE DUAL-LAYER SCANNING LOGO STYLES --- */
-        .header-name.scan-logo {
-            max-width: fit-content;
-            color: var(--text-sub);
-            font-size: 1.4rem;
+        /* --- UIVERSE RAKIB BUTTON ANIMATION (Glassy Theme Integrated) --- */
+        .nav-rakib-btn {
+            width: 8.5em;
             position: relative;
-            font-family: "Helvetica Neue", "Arial", sans-serif;
-            font-style: normal;
-            font-weight: 700;
-            margin: 0;
-            line-height: 1.2;
-            cursor: default;
-        }
-        
-        .header-name.scan-logo span {
-            display: inline-block;
-            font-family: "Helvetica Neue", "Arial", sans-serif;
-            font-style: normal;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            animation: cut 4.5s ease-in-out infinite;
-            transition: 1s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-        }
-        
-        .header-name.scan-logo:hover span {
+            height: 2.8em;
+            border: 2px ridge #3D7EAE;
+            outline: none;
+            background: rgba(255, 255, 255, 0.05); /* Frosted glass semi-transparent background */
+            backdrop-filter: blur(12px); /* Creates the signature glassy blur */
+            -webkit-backdrop-filter: blur(12px); /* Safari support */
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1), inset 1px 1px 3px rgba(255, 255, 255, 0.1);
             color: var(--text-main);
+            transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+            border-radius: 0.5em;
+            font-size: 16px;
+            font-weight: 800;
+            font-family: inherit;
+            cursor: pointer;
+            letter-spacing: 1px;
         }
-        
-        .header-name.scan-logo::after {
-            position: absolute;
+
+        .nav-rakib-btn::after {
             content: "";
-            width: 100%;
-            height: 5px;
-            border-radius: 4px;
-            background-color: rgba(61, 126, 174, 0.55);
-            top: 0px;
-            filter: blur(8px);
-            animation: scan 4.5s ease-in-out infinite;
-            left: 0;
-            z-index: 0;
-            transition: 1s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-        }
-
-        .header-name.scan-logo::before {
             position: absolute;
+            top: -10px;
+            left: 3%;
+            width: 95%;
+            height: 40%;
+            background: var(--overlay-bg); /* Seamlessly masks against the glassy navbar */
+            transition: 0.5s;
+            transform-origin: center;
+        }
+
+        .nav-rakib-btn::before {
             content: "";
-            width: 100%;
-            height: 4px;
-            border-radius: 4px;
-            background-color: #3D7EAE;
-            top: 0px;
-            animation: scan 4.5s ease-in-out infinite;
-            left: 0;
-            z-index: 1;
-            filter: opacity(0.9);
-            transition: 1s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            transform-origin: center;
+            position: absolute;
+            top: 80%;
+            left: 3%;
+            width: 95%;
+            height: 40%;
+            background: var(--overlay-bg); /* Seamlessly masks against the glassy navbar */
+            transition: 0.5s;
         }
 
-        @keyframes scan {
-            0%, 50%, 100% { top: 0px; }
-            25%, 75% { top: 26px; }
+        .nav-rakib-btn:hover::before, .nav-rakib-btn:hover::after {
+            transform: scale(0);
         }
 
-        @keyframes cut {
-            0%, 75%, 100% { clip-path: inset(0 0 0 0); }
-            25% { clip-path: inset(100% 0 0 0); }
-            50% { clip-path: inset(0 0 100% 0); }
+        .nav-rakib-btn:hover {
+            box-shadow: inset 0px 0px 25px #3D7EAE, 0 8px 32px rgba(61, 126, 174, 0.3);
+            background: rgba(61, 126, 174, 0.15); /* Adds a vibrant blue glassy tint on hover */
+            color: var(--text-main);
+            border-color: #3D7EAE;
         }
 
         /* --- TOP MIDDLE NAVIGATION --- */
@@ -367,7 +353,7 @@
         /* --- ENHANCED DOWN-TO-UP RAISE ANIMATION --- */
         .fade-up {
             opacity: 0;
-            transform: translateY(60px); /* Increased from 30px for a bold down-to-up raise */
+            transform: translateY(60px);
             transition: opacity 0.85s cubic-bezier(0.16, 1, 0.3, 1), transform 0.85s cubic-bezier(0.16, 1, 0.3, 1);
             will-change: opacity, transform;
         }
@@ -426,7 +412,6 @@
             .hero-buttons { justify-content: center; }
             .profile-card { max-width: 300px; height: 400px; }
             
-            /* About Section Tablet 2+1 Layout */
             .about-cards { grid-template-columns: repeat(2, 1fr); }
             .about-card:last-child { grid-column: span 2; }
         }
@@ -435,8 +420,6 @@
             .navbar { padding: 15px 20px; }
             .hero-left h1 { font-size: 2.2rem; }
             .typing-container { font-size: 1.25rem; min-height: 35px; margin-bottom: 28px; }
-            .header-name.scan-logo { font-size: 1.1rem; }
-            .header-title { font-size: 0.7rem; }
             
             .about-punchline { font-size: 2.6rem; }
             .about-description { font-size: 1.05rem; }
@@ -446,7 +429,6 @@
             .hero-buttons { flex-direction: column; width: 100%; gap: 12px; }
             .hero-buttons .metal-btn-wrapper, .hero-buttons .metal-btn-wrapper a.neu-button { width: 100%; }
             
-            /* About Section Mobile Vertical Stack */
             .about-cards { grid-template-columns: 1fr; }
             .about-card:last-child { grid-column: span 1; }
             .card-number { font-size: 3.2rem; }
@@ -481,8 +463,7 @@
                 <span class="bot"></span>
             </label>
             <div class="header-profile">
-                <h1 class="header-name scan-logo"><span data-text="Arif">Arif</span></h1>
-                <p class="header-title">Software Engineer</p>
+                <button class="nav-rakib-btn">RAKIB.</button>
             </div>
         </div>
 
@@ -1093,7 +1074,6 @@
                 if (entry.isIntersecting) {
                     entry.target.classList.add('in-view');
                 } else if (entry.boundingClientRect.top > 0) {
-                    // Reset animation when scrolled back up above viewport
                     entry.target.classList.remove('in-view');
                 }
             });
